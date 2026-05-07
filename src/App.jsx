@@ -17,7 +17,7 @@ export default function App() {
     useState("");
 
   const [aiText, setAiText] =
-    useState("Hello boss");
+    useState("Hello! I am your AI assistant. How can I help you today?");
 
   const recognitionRef =
     useRef(null);
@@ -116,9 +116,24 @@ const speak = (text) => {
   // AFTER AI SPEAKS
   speech.onend = () => {
 
-    setListening(false);
-  };
+  setListening(false);
 
+  // restart mic automatically
+  setTimeout(() => {
+
+    try {
+
+      recognitionRef.current.start();
+
+    }
+
+    catch (err) {
+
+      console.log(err);
+    }
+
+  }, 500);
+};
   window.speechSynthesis
     .speak(speech);
 };
@@ -154,12 +169,31 @@ const speak = (text) => {
 
       const response =
 
-        completion.choices[0]
-          .message.content;
+  completion.choices[0]
+    .message.content;
 
-      setAiText(response);
+console.log(
+  "AI:",
+  response
+);
 
-      speak(response);
+// SHOW ORIGINAL TEXT
+setAiText(response);
+
+// CLEAN TEXT FOR VOICE
+const cleanText = response
+
+  // remove markdown symbols
+  .replace(/[#*_`>-]/g, "")
+
+  // remove extra spaces
+  .replace(/\s+/g, " ")
+
+  // trim spaces
+  .trim();
+
+// SPEAK CLEAN TEXT
+speak(cleanText);
 
     }
 
@@ -207,14 +241,14 @@ const speak = (text) => {
       </h1>
 
       <div
-        className={
-          listening
-            ? "circle active"
-            : "circle"
-        }
-      >
-        AI
-      </div>
+  className={
+    listening
+      ? "circle active"
+      : "circle"
+  }
+>
+  <span>AI</span>
+</div>
 
       <button
   onClick={() => {
@@ -233,7 +267,7 @@ const speak = (text) => {
 
       <div className="box">
 
-        <h2>You Said</h2>
+        <h2>Your Questions</h2>
 
         <p>{userText}</p>
 
