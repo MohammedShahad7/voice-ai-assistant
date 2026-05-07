@@ -57,28 +57,65 @@ export default function App() {
       new SpeechRecognition();
 
     recognition.lang =
-      "en-US";
+      "en-IN";
 
     recognition.continuous =
       false;
 
     recognition.interimResults =
-      false;
+      true;
 
-    recognition.onresult =
-      async (event) => {
+    recognition.maxAlternatives =
+    3;
 
-      const text =
+    let silenceTimer;
 
-        event.results[0][0]
-          .transcript;
+recognition.onresult =
+  async (event) => {
 
-      console.log(text);
+  clearTimeout(
+    silenceTimer
+  );
 
-      setUserText(text);
+  const current =
+    event.resultIndex;
 
-      await handleAI(text);
-    };
+  const finalText =
+
+    event.results[current][0]
+      .transcript;
+
+  console.log(
+    "YOU:",
+    finalText
+  );
+
+  setUserText(
+    finalText
+  );
+
+  silenceTimer =
+  setTimeout(async () => {
+
+    // ignore tiny sounds
+    if (
+      finalText.length < 3
+    ) {
+      return;
+    }
+
+    // stop listening
+    recognition.stop();
+
+    setListening(false);
+
+    // ask AI
+    await handleAI(
+      finalText
+    );
+
+  }, 2000);
+};
 
     recognition.onend = () => {
 
@@ -113,26 +150,13 @@ const speak = (text) => {
 
   speech.pitch = 1;
 
+  speech.volume = 1;
+
   // AFTER AI SPEAKS
   speech.onend = () => {
 
   setListening(false);
 
-  // restart mic automatically
-  setTimeout(() => {
-
-    try {
-
-      recognitionRef.current.start();
-
-    }
-
-    catch (err) {
-
-      console.log(err);
-    }
-
-  }, 500);
 };
   window.speechSynthesis
     .speak(speech);
@@ -141,6 +165,7 @@ const speak = (text) => {
   // AI
   const handleAI =
     async (text) => {
+  if (!text.trim()) return;
 
     try {
 
@@ -251,13 +276,47 @@ speak(cleanText);
 </div>
 
       <button
-  onClick={() => {
+  onClick={async () => {
 
-    // stop old AI voice
-    window.speechSynthesis.cancel();
+    try {
 
-    // start mic
-    startListening();
+      // stop speaking
+      window.speechSynthesis.cancel();
+
+      // stop old recognition safely
+      if (recognitionRef.current) {
+
+        recognitionRef.current.abort();
+      }
+
+      // small delay for phones
+      setTimeout(async () => {
+
+        try {
+
+          await navigator.mediaDevices.getUserMedia({
+            audio: true,
+          });
+
+          recognitionRef.current.start();
+
+          setListening(true);
+
+        }
+
+        catch (err) {
+
+          console.log(err);
+        }
+
+      }, 400);
+
+    }
+
+    catch (err) {
+
+      console.log(err);
+    }
   }}
 >
   {listening
