@@ -91,19 +91,37 @@ export default function App() {
   }, []);
 
   // SPEAK
-  const speak = (text) => {
+const speak = (text) => {
 
-    const speech =
+  // STOP MIC
+  if (recognitionRef.current) {
 
-      new SpeechSynthesisUtterance(
-        text
-      );
+    recognitionRef.current.stop();
+  }
 
-    speech.lang = "en-US";
+  window.speechSynthesis.cancel();
 
-    window.speechSynthesis
-      .speak(speech);
+  const speech =
+
+    new SpeechSynthesisUtterance(
+      text
+    );
+
+  speech.lang = "en-IN";
+
+  speech.rate = 1;
+
+  speech.pitch = 1;
+
+  // AFTER AI SPEAKS
+  speech.onend = () => {
+
+    setListening(false);
   };
+
+  window.speechSynthesis
+    .speak(speech);
+};
 
   // AI
   const handleAI =
@@ -199,14 +217,19 @@ export default function App() {
       </div>
 
       <button
-        onClick={
-          startListening
-        }
-      >
-        {listening
-          ? "Listening..."
-          : "Start Talking"}
-      </button>
+  onClick={() => {
+
+    // stop old AI voice
+    window.speechSynthesis.cancel();
+
+    // start mic
+    startListening();
+  }}
+>
+  {listening
+    ? "Listening..."
+    : "Start Talking"}
+</button>
 
       <div className="box">
 
