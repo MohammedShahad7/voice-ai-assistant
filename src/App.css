@@ -1,98 +1,320 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: Arial, sans-serif;
-  background: #020617;
+  font-family: "Poppins", sans-serif;
+
+  background:
+    linear-gradient(
+      135deg,
+      #020617,
+      #0f172a,
+      #111827
+    );
+
   color: white;
+
+  overflow-x: hidden;
 }
+
+/* APP */
 
 .app {
+
   min-height: 100vh;
+
   display: flex;
+
   flex-direction: column;
+
   align-items: center;
-  justify-content: flex-start;
-  padding: 40px 20px;
+
+  padding: 30px 20px;
 }
+
+/* TITLE */
 
 h1 {
-  font-size: 50px;
-  margin-bottom: 30px;
+
+  font-size: 55px;
+
+  margin-top: 10px;
+
+  margin-bottom: 35px;
+
+  background:
+    linear-gradient(
+      to right,
+      #60a5fa,
+      #38bdf8,
+      #818cf8
+    );
+
+  -webkit-background-clip: text;
+
+  -webkit-text-fill-color:
+    transparent;
+
+  text-align: center;
+
+  letter-spacing: 1px;
 }
 
+/* AI CIRCLE */
+
 .circle {
-  width: 180px;
-  height: 180px;
+
+  width: 220px;
+
+  height: 220px;
+
   border-radius: 50%;
-  background: #1e293b;
-  border: 6px solid #3b82f6;
+
+  background:
+    radial-gradient(
+      circle at top,
+      #2563eb,
+      #0f172a
+    );
+
+  border:
+    5px solid rgba(255,255,255,0.15);
 
   display: flex;
+
   align-items: center;
+
   justify-content: center;
 
-  font-size: 40px;
+  font-size: 55px;
+
   font-weight: bold;
 
-  margin-bottom: 30px;
+  margin-bottom: 35px;
 
-  transition: 0.3s;
+  transition: 0.4s ease;
+
+  box-shadow:
+    0 0 40px rgba(59,130,246,0.3);
+
+  position: relative;
+
+  overflow: hidden;
+}
+
+/* ANIMATION */
+
+.circle::before {
+
+  content: "";
+
+  position: absolute;
+
+  width: 300px;
+
+  height: 300px;
+
+  background:
+    conic-gradient(
+      transparent,
+      rgba(96,165,250,0.7),
+      transparent
+    );
+
+  animation:
+    rotate 4s linear infinite;
+}
+
+.circle::after {
+
+  content: "";
+
+  position: absolute;
+
+  inset: 8px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      #0f172a,
+      #020617
+    );
+}
+
+.circle span {
+
+  position: relative;
+
+  z-index: 10;
 }
 
 .active {
-  transform: scale(1.1);
+
+  transform: scale(1.08);
 
   box-shadow:
-    0 0 20px #3b82f6,
-    0 0 50px #3b82f6;
+    0 0 25px #3b82f6,
+    0 0 60px #2563eb,
+    0 0 100px rgba(59,130,246,0.6);
 }
 
+/* BUTTON */
+
 button {
-  padding: 15px 30px;
+
+  padding: 16px 38px;
 
   border: none;
 
-  border-radius: 12px;
+  border-radius: 16px;
 
-  background: #2563eb;
+  background:
+    linear-gradient(
+      to right,
+      #2563eb,
+      #3b82f6
+    );
 
   color: white;
 
   font-size: 20px;
 
+  font-weight: 600;
+
   cursor: pointer;
 
-  margin-bottom: 30px;
+  transition: 0.3s ease;
 
-  transition: 0.3s;
+  margin-bottom: 35px;
+
+  box-shadow:
+    0 10px 30px rgba(37,99,235,0.3);
 }
 
 button:hover {
-  background: #1d4ed8;
+
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 15px 35px rgba(37,99,235,0.5);
 }
 
+button:active {
+
+  transform: scale(0.96);
+}
+
+/* BOXES */
+
 .box {
-  width: 80%;
-  max-width: 700px;
 
-  background: #111827;
+  width: 90%;
 
-  padding: 20px;
+  max-width: 800px;
+
+  background:
+    rgba(17,24,39,0.7);
+
+  backdrop-filter: blur(14px);
+
+  border:
+    1px solid rgba(255,255,255,0.08);
+
+  padding: 25px;
 
   margin-top: 20px;
 
-  border-radius: 20px;
+  border-radius: 24px;
 
   box-shadow:
-    0 0 10px rgba(0,0,0,0.3);
+    0 8px 30px rgba(0,0,0,0.35);
+
+  transition: 0.3s ease;
+}
+
+.box:hover {
+
+  transform: translateY(-2px);
+
+  border:
+    1px solid rgba(96,165,250,0.25);
 }
 
 .box h2 {
+
   margin-top: 0;
+
+  margin-bottom: 15px;
+
   color: #60a5fa;
+
+  font-size: 28px;
 }
 
 .box p {
-  font-size: 18px;
-  line-height: 1.5;
+
+  font-size: 19px;
+
+  line-height: 1.8;
+
+  color: #e5e7eb;
+}
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+
+  h1 {
+
+    font-size: 38px;
+  }
+
+  .circle {
+
+    width: 170px;
+
+    height: 170px;
+
+    font-size: 42px;
+  }
+
+  button {
+
+    width: 100%;
+
+    max-width: 320px;
+
+    font-size: 18px;
+  }
+
+  .box {
+
+    width: 95%;
+  }
+
+  .box h2 {
+
+    font-size: 24px;
+  }
+
+  .box p {
+
+    font-size: 17px;
+  }
+}
+
+/* ROTATION */
+
+@keyframes rotate {
+
+  from {
+
+    transform: rotate(0deg);
+  }
+
+  to {
+
+    transform: rotate(360deg);
+  }
 }
